@@ -75,7 +75,7 @@ public class Menu extends JPanel implements ActionListener {
                 currentP = printerPanel;
                 currentP.setVisible(true);
             } else {
-                System.out.println("Tiskárna nenalezena");
+                System.out.println("Printer not found");
             }
 
         }

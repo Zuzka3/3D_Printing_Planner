@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +16,7 @@ public class Planner extends JFrame {
 
 
     private List<Item> items = new ArrayList<>();
-    private JButton addButton, editButton, showDetails, deleteButton;
+    private JButton addButton, editButton, showDetails, deleteButton, saveButton;
     private JPanel eventPanel, controlPanel, timePanel, eventStatusPanel;
     private JLabel currentTimeLabel, currentDateLabel, eventStatusLabel;
     private JTable eventTable;
@@ -27,6 +28,7 @@ public class Planner extends JFrame {
         this.printerName = name;
 
         setTitle(this.printerName);
+        readFromFile();
 
         JLabel backgroundLabel = new JLabel();
         eventPanel = new JPanel(new BorderLayout());
@@ -47,13 +49,15 @@ public class Planner extends JFrame {
         editButton = new JButton("Edit");
         showDetails = new JButton("Show details");
         deleteButton = new JButton("Delete");
+        saveButton = new JButton("Save");
 
         controlPanel = new JPanel();
-        controlPanel.setLayout(new GridLayout(4, 1));
+        controlPanel.setLayout(new GridLayout(5, 1));
         controlPanel.add(addButton);
         controlPanel.add(editButton);
         controlPanel.add(showDetails);
         controlPanel.add(deleteButton);
+        controlPanel.add(saveButton);
 
         addButton.setBackground(Color.lightGray);
         addButton.setFont(new Font("Serif", Font.BOLD,20));
@@ -63,6 +67,8 @@ public class Planner extends JFrame {
         showDetails.setFont(new Font("Serif", Font.BOLD,20));
         deleteButton.setBackground(Color.lightGray);
         deleteButton.setFont(new Font("Serif", Font.BOLD,20));
+        saveButton.setBackground(Color.lightGray);
+        saveButton.setFont(new Font("Serif", Font.BOLD,20));
 
 
         DefaultTableModel tableModel = new DefaultTableModel();
@@ -94,7 +100,7 @@ public class Planner extends JFrame {
         timePanel.add(currentTimeLabel);
         timePanel.add(currentDateLabel);
 
-        eventStatusLabel = new JLabel("Není aktivní tisk. Další projekt: ");
+        eventStatusLabel = new JLabel("Next Event: ");
         eventStatusLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         eventStatusPanel = new JPanel();
@@ -119,8 +125,9 @@ public class Planner extends JFrame {
         addButton.addActionListener(e -> addEvent());
         editButton.addActionListener(e -> editEvent());
         deleteButton.addActionListener(e -> deleteEvent());
+        saveButton.addActionListener(e -> saveToFile());
 
-        //sonic tlacitko - nevim jestli facha
+
         showDetails.addActionListener(e -> {
             int selectedRow = eventTable.getSelectedRow();
             if (selectedRow != -1) {
@@ -176,13 +183,10 @@ public class Planner extends JFrame {
                         try {
                             Date startDate = new Date(currentDate + dateFormat.parse(dateStr).getTime() + 3600000);
 
-
-                            int selectedMinutes = convertDurationToMinutes(duration);
-
+                            int selectedMinutes = Item.convertDurationToMinutes(duration);
 
                             Date endDate = new Date(startDate.getTime() + selectedMinutes * 60000L);
 
-                            //k tomu pridani tech super informaci navic
                             JTextArea optionalInfoArea = new JTextArea(5, 20);
                             JScrollPane scrollPane = new JScrollPane(optionalInfoArea);
                             int optionalInfoOption = JOptionPane.showConfirmDialog(this, scrollPane, "Enter Optional Information", JOptionPane.OK_CANCEL_OPTION);
@@ -191,8 +195,8 @@ public class Planner extends JFrame {
                                 optionalInfo = optionalInfoArea.getText();
                             }
 
-                            double dfgd = ((double) (currentDate - endDate.getTime()) / (endDate.getTime() - startDate.getTime()));
-                            int status = (int) Math.max(0, Math.min(100, (100 + Math.round(dfgd * 100))));
+                            double statusTimer = ((double) (currentDate - endDate.getTime()) / (endDate.getTime() - startDate.getTime()));
+                            int status = (int) Math.max(0, Math.min(100, (100 + Math.round(statusTimer * 100))));
 
 
                             Item item = new Item(name, material, startDate, endDate, status, optionalInfo);
@@ -212,53 +216,6 @@ public class Planner extends JFrame {
         }
         updateEventStatus();
     }
-
-    private int convertDurationToMinutes(String duration) {
-        int minutes = 0;
-        switch (duration) {
-            case "1 min":
-                minutes = 1;
-                break;
-            case "5 min":
-                minutes = 5;
-                break;
-            case "10 min":
-                minutes = 10;
-                break;
-            case "15 min":
-                minutes = 15;
-                break;
-            case "30 min":
-                minutes = 30;
-                break;
-            case "1 hour":
-                minutes = 60;
-                break;
-            case "2 hours":
-                minutes = 120;
-                break;
-            case "3 hours":
-                minutes = 180;
-                break;
-            case "4 hours":
-                minutes = 240;
-                break;
-            case "5 hours":
-                minutes = 300;
-                break;
-            case "6 hours":
-                minutes = 360;
-                break;
-            case "7 hours":
-                minutes = 420;
-                break;
-            default:
-                break;
-        }
-        return minutes;
-    }
-
-
 
     private void updateEventTable() {
         DefaultTableModel model = (DefaultTableModel) eventTable.getModel();
@@ -381,6 +338,40 @@ public class Planner extends JFrame {
             eventStatusPanel.setBackground(Color.pink);
         }
 
+    }
+
+    public void saveToFile(){
+        try {
+            String fileName = "saved/" + printerName + ".txt";
+            FileOutputStream file = new FileOutputStream(fileName);
+            ObjectOutputStream obj = new ObjectOutputStream(file);
+
+            obj.writeObject(this.items);
+            obj.flush();
+            obj.close();
+            System.out.println("SAVED TO " + fileName + ".");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void readFromFile(){
+        try {
+            String fileName = "saved/" + printerName + ".txt";
+            FileInputStream file = new FileInputStream(fileName);
+            ObjectInputStream obj = new ObjectInputStream(file);
+
+            this.items = (ArrayList<Item>) obj.readObject();
+            obj.close();
+            System.out.println("READ FROM" + fileName + ".");
+        }
+        catch (IOException e){
+            System.out.println("FILE for \"" + printerName.toUpperCase() + "\" WAS NOT FOUND.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

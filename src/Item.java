@@ -101,4 +101,49 @@ public class Item {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             return dateFormat.format(dateStart);
         }
+
+    public static int convertDurationToMinutes(String duration) {
+        int minutes = 0;
+        switch (duration) {
+            case "1 min":
+                minutes = 1;
+                break;
+            case "5 min":
+                minutes = 5;
+                break;
+            case "10 min":
+                minutes = 10;
+                break;
+            case "15 min":
+                minutes = 15;
+                break;
+            case "30 min":
+                minutes = 30;
+                break;
+            case "1 hour":
+                minutes = 60;
+                break;
+            case "2 hours":
+                minutes = 120;
+                break;
+            case "3 hours":
+                minutes = 180;
+                break;
+            case "4 hours":
+                minutes = 240;
+                break;
+            case "5 hours":
+                minutes = 300;
+                break;
+            case "6 hours":
+                minutes = 360;
+                break;
+            case "7 hours":
+                minutes = 420;
+                break;
+            default:
+                break;
+        }
+        return minutes;
+    }
 }
