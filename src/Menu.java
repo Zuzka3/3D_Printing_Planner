@@ -94,9 +94,9 @@ public class Menu extends JPanel implements ActionListener {
     public void deleteSave(String name){
         File file = findFile(name, new File("saved"));
         if(file.delete()){
-            System.out.println("DELETE FILE \\\"\" + file.getName() + \"\\\".\".");
+            System.out.println("Delete file \\\"\" + file.getName() + \"\\\".\".");
         }else{
-            System.out.println("FAILED TO DELETE FILE \\\"\" + file.getName() + \"\\\".\".");
+            System.out.println("Failed to delete file \\\"\" + file.getName() + \"\\\".\".");
         }
     }
 
