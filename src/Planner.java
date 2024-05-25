@@ -1,21 +1,19 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
-public class Planner extends JFrame {
+public class Planner extends JFrame implements Serializable {
+
+
     private String printerName;
 
-
-
     private List<Item> items = new ArrayList<>();
+
     private JButton addButton, editButton, showDetails, deleteButton, saveButton;
     private JPanel eventPanel, controlPanel, timePanel, eventStatusPanel;
     private JLabel currentTimeLabel, currentDateLabel, eventStatusLabel;
@@ -23,6 +21,9 @@ public class Planner extends JFrame {
     private Timer timer;
 
     private long currentDate;
+
+    private Random r = new Random();
+
 
     public Planner(String name) {
         this.printerName = name;
@@ -40,6 +41,7 @@ public class Planner extends JFrame {
         initComponents();
         setIconImage(new ImageIcon("3d-printer.png").getImage());
 
+
         setLocationRelativeTo(null);
         setVisible(false);
     }
@@ -49,7 +51,7 @@ public class Planner extends JFrame {
         editButton = new JButton("Edit");
         showDetails = new JButton("Show details");
         deleteButton = new JButton("Delete");
-        saveButton = new JButton("Save");
+        saveButton = new JButton(("Save"));
 
         controlPanel = new JPanel();
         controlPanel.setLayout(new GridLayout(5, 1));
@@ -100,7 +102,7 @@ public class Planner extends JFrame {
         timePanel.add(currentTimeLabel);
         timePanel.add(currentDateLabel);
 
-        eventStatusLabel = new JLabel("Next Event: ");
+        eventStatusLabel = new JLabel("Není aktivní tisk. Další projekt: ");
         eventStatusLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         eventStatusPanel = new JPanel();
@@ -128,6 +130,7 @@ public class Planner extends JFrame {
         saveButton.addActionListener(e -> saveToFile());
 
 
+
         showDetails.addActionListener(e -> {
             int selectedRow = eventTable.getSelectedRow();
             if (selectedRow != -1) {
@@ -151,27 +154,30 @@ public class Planner extends JFrame {
             }
         }, 0, 500);
 
-
     }
 
-
-
     private void addEvent() {
-        String[] materials = {"PLA", "PETG", "PC"};
+        String[] materials = {"PLA - normal", "PETG - waterproof", "PC - tough"};
 
         String[] printDurations = {"1 min", "5 min", "10 min", "15 min", "30 min", "1 hour", "2 hours", "3 hours", "4h", "5h", "6h", "7h"};
 
 
-        String name = JOptionPane.showInputDialog(this, "Enter event name:");
-        if (name != null && !name.trim().isEmpty()) {
 
-            //boxik pla, petggg
-            JComboBox<String> materialComboBox = new JComboBox<>(materials);
-            int materialIndex = JOptionPane.showConfirmDialog(this, materialComboBox, "Select Material", JOptionPane.OK_CANCEL_OPTION);
-            if (materialIndex == JOptionPane.OK_OPTION) {
-                String material = materialComboBox.getSelectedItem().toString();
+        JComboBox<String> materialComboBox = new JComboBox<>(materials);
+        int materialIndex = JOptionPane.showConfirmDialog(this, materialComboBox, "Select Material", JOptionPane.OK_CANCEL_OPTION);
+        if (materialIndex == JOptionPane.OK_OPTION) {
+            String material = materialComboBox.getSelectedItem().toString();
 
-                //jak dlpuho to bude tisknout - je tam boxik na vyberos
+            String name;
+            String aiOption = aiSuggestedItemNames(material);
+            int aiIndex = JOptionPane.showConfirmDialog(null, "AI suggested: " + aiOption);
+            if(aiIndex == JOptionPane.YES_OPTION) name = aiOption;
+            else if(aiIndex == JOptionPane.CANCEL_OPTION) name = null;
+            else name = JOptionPane.showInputDialog(this, "Enter event name");
+
+            if(name != null && !name.trim().isEmpty()){
+
+
                 JComboBox<String> durationComboBox = new JComboBox<>(printDurations);
                 int durationIndex = JOptionPane.showConfirmDialog(this, durationComboBox, "Select Printing Duration", JOptionPane.OK_CANCEL_OPTION);
                 if (durationIndex == JOptionPane.OK_OPTION) {
@@ -187,6 +193,7 @@ public class Planner extends JFrame {
 
                             Date endDate = new Date(startDate.getTime() + selectedMinutes * 60000L);
 
+
                             JTextArea optionalInfoArea = new JTextArea(5, 20);
                             JScrollPane scrollPane = new JScrollPane(optionalInfoArea);
                             int optionalInfoOption = JOptionPane.showConfirmDialog(this, scrollPane, "Enter Optional Information", JOptionPane.OK_CANCEL_OPTION);
@@ -195,8 +202,8 @@ public class Planner extends JFrame {
                                 optionalInfo = optionalInfoArea.getText();
                             }
 
-                            double statusTimer = ((double) (currentDate - endDate.getTime()) / (endDate.getTime() - startDate.getTime()));
-                            int status = (int) Math.max(0, Math.min(100, (100 + Math.round(statusTimer * 100))));
+                            double dfgd = ((double) (currentDate - endDate.getTime()) / (endDate.getTime() - startDate.getTime()));
+                            int status = (int) Math.max(0, Math.min(100, (100 + Math.round(dfgd * 100))));
 
 
                             Item item = new Item(name, material, startDate, endDate, status, optionalInfo);
@@ -316,9 +323,9 @@ public class Planner extends JFrame {
         long currentTimeMillis = System.currentTimeMillis();
         for (Item item : items) {
             if (item.getStatus() < 100){
-                double dfgd = ((double) (currentDate - item.getDateEnd().getTime()) /
+                double statusPercent = ((double) (currentDate - item.getDateEnd().getTime()) /
                         (item.getDateEnd().getTime() - item.getDateStart().getTime()));
-                item.setStatus((int) Math.max(0, Math.min(100, (100 + Math.round(dfgd * 100)))));
+                item.setStatus((int) Math.max(0, Math.min(100, (100 + Math.round(statusPercent * 100)))));
                 updateEventTable();
             }
 
@@ -374,10 +381,42 @@ public class Planner extends JFrame {
         }
     }
 
+    public String aiSuggestedItemNames(String material){
+        char[] chars = material.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for(char c : chars){
+            if(Character.isUpperCase(c)){
+                sb.append(c);
+            }
+            else break;
+        }
+
+        String fileName = "ai/" + sb + ".txt";
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            ArrayList<String> sugItem = new ArrayList<>();
+            int lines= 0;
+
+            br.readLine();
+            String s = "";
+            while((s = br.readLine()) != null){
+                sugItem.add(s);
+                lines++;
+            }
+
+            return sugItem.get(r.nextInt(lines));
+        }
+        catch (Exception ignored){
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+
 
 }
-
-
-
-
-

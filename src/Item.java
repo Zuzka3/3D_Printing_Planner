@@ -1,108 +1,116 @@
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Item {
-
-        private String name;
-        private Date dateStart;
-        private Date dateEnd;
-        private String details;
-        private String material;
-        private int status;
-        private String optionalInfo;
-
-
-        private static List<Item> items = new ArrayList<>();
-
-        public static void addEvent(Item event) {
-            items.add(event);
-        }
-
-        public static List<Item> getEvents() {
-            return items;
-        }
+public class Item implements Serializable {
+    private String name;
+    private Date dateStart;
+    private Date dateEnd;
+    private String details;
+    private String material;
+    private int status;
+    private String optionalInfo;
 
 
-        public Item(String name, String material, Date dateStart, Date dateEnd, int status, String optionalInfo) {
-            this.name = name;
-            this.dateStart = dateStart;
-            this.dateEnd = dateEnd;
-            this.details = " ";
-            this.status = status;
-            this.material = material;
-            this.optionalInfo= optionalInfo;
-        }
+    private static List<Item> items = new ArrayList<>();
+
+    public static void addEvent(Item item) {
+        items.add(item);
+    }
+
+    public static List<Item> getEvents() {
+        return items;
+    }
 
 
-        public String getName() {
-            return name;
-        }
+    public Item(String name, String material, Date dateStart, Date dateEnd, int status, String optionalInfo) {
+        this.name = name;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
+        this.details = " ";
+        this.status = status;
+        this.material = material;
+        this.optionalInfo= optionalInfo;
+    }
 
-        public void setName(String name) {
-            this.name = name;
-        }
 
-        public Date getDateStart() {
-            return dateStart;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public void setDateStart(Date dateStart) {
-            this.dateStart = dateStart;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        public Date getDateEnd() {
-            return dateEnd;
-        }
+    public Date getDateStart() {
+        return dateStart;
+    }
 
-        public void setDateEnd(Date dateEnd) {
-            this.dateEnd = dateEnd;
-        }
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
+    }
 
-        public String getDetails() {
-            return details;
-        }
+    public Date getDateEnd() {
+        return dateEnd;
+    }
 
-        public void setDetails(String details) {
-            this.details = details;
-        }
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
 
-        public String getMaterial() {
-            return material;
-        }
+    public String getDetails() {
+        return details;
+    }
 
-        public void setMaterial(String material) {
-            this.material = material;
-        }
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
-        public int getStatus() {
-            return status;
-        }
+    public String getMaterial() {
+        return material;
+    }
 
-        public void setStatus(int status) {
-            this.status = status;
-        }
+    public void setMaterial(String material) {
+        this.material = material;
+    }
 
-        public String getOptionalInfo() {
-            return optionalInfo;
-        }
+    public int getStatus() {
+        return status;
+    }
 
-        public void setOptionalInfo(String optionalInfo) {
-            this.optionalInfo = optionalInfo;
-        }
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-        public static void setEvents(List<Item> events) {
-            Item.items = events;
+    public String getOptionalInfo() {
+        return optionalInfo;
+    }
 
-        }
+    public void setOptionalInfo(String optionalInfo) {
+        this.optionalInfo = optionalInfo;
+    }
 
-        public String getDateStr() {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            return dateFormat.format(dateStart);
-        }
+    public static List<Item> getItems() {
+        return items;
+    }
 
-    public static int convertDurationToMinutes(String duration) {
+    public static void setItems(List<Item> items) {
+        Item.items = items;
+    }
+
+    public static void setEvents(List<Item> items) {
+        Item.items = items;
+
+    }
+
+    public String getDateStr() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return dateFormat.format(dateStart);
+    }
+
+    public static  int convertDurationToMinutes(String duration) {
         int minutes = 0;
         switch (duration) {
             case "1 min":
@@ -146,4 +154,7 @@ public class Item {
         }
         return minutes;
     }
+
+
+
 }
