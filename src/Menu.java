@@ -94,9 +94,9 @@ public class Menu extends JPanel implements ActionListener {
     public void deleteSave(String name){
         File file = findFile(name, new File("saved"));
         if(file.delete()){
-            System.out.println("Delete file \\\"\" + file.getName() + \"\\\".\".");
+            System.out.println("Deleted file \"" + file.getName() + "\".");
         }else{
-            System.out.println("Failed to delete file \\\"\" + file.getName() + \"\\\".\".");
+            System.out.println("File \"" + name + "\" not found.");
         }
     }
 
@@ -111,7 +111,7 @@ public class Menu extends JPanel implements ActionListener {
                 }
             }
         }
-        System.out.println("FILE WAS NOT FOUND" + name);
+        System.out.println("File was not found " + name);
         return null;
     }
 
