@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Planner_3D_Printing:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Planner_3D_Printing_jar</output-path>
+    <root id="archive" name="Planner_3D_Printing.jar">
+      <element id="module-output" name="Planner_3D_Printing" />
+      <element id="dir-copy" path="$PROJECT_DIR$/saved" />
+    </root>
+  </artifact>
+</component>

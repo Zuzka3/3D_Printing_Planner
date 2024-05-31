@@ -16,6 +16,9 @@ public class Planner extends JFrame implements Serializable {
 
     private JButton addButton, editButton, showDetails, deleteButton, saveButton;
     private JPanel eventPanel, controlPanel, timePanel, eventStatusPanel;
+
+
+
     private JLabel currentTimeLabel, currentDateLabel, eventStatusLabel;
     private JTable eventTable;
     private Timer timer;
@@ -39,7 +42,7 @@ public class Planner extends JFrame implements Serializable {
 
         setSize(800, 600);
         initComponents();
-        setIconImage(new ImageIcon("3d-printer.png").getImage());
+        setIconImage(new ImageIcon(this.getClass().getResource("3d-printer.png")).getImage());
 
 
         setLocationRelativeTo(null);
@@ -238,7 +241,7 @@ public class Planner extends JFrame implements Serializable {
         }
     }
 
-    private String calculateDurationString(Date startDate, Date endDate) {
+    public String calculateDurationString(Date startDate, Date endDate) {
         long durationMillis = endDate.getTime() - startDate.getTime();
         int minutes = (int) (durationMillis / (60 * 1000));
         int hours = minutes / 60;
@@ -253,7 +256,7 @@ public class Planner extends JFrame implements Serializable {
         return durationStr;
     }
 
-    private boolean isValidDate(String dateStr) {
+    public boolean isValidDate(String dateStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         dateFormat.setLenient(false);
 
@@ -308,7 +311,7 @@ public class Planner extends JFrame implements Serializable {
         }
     }
 
-    private void updateDateTimeLabels() {
+    public void updateDateTimeLabels() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date now = new Date();
@@ -346,10 +349,12 @@ public class Planner extends JFrame implements Serializable {
         }
 
     }
+    
+    
 
     public void saveToFile(){
         try {
-            String fileName = "saved/" + printerName + ".txt";
+            String fileName = printerName + ".txt";
             FileOutputStream file = new FileOutputStream(fileName);
             ObjectOutputStream obj = new ObjectOutputStream(file);
 
@@ -365,7 +370,7 @@ public class Planner extends JFrame implements Serializable {
 
     public void readFromFile(){
         try {
-            String fileName = "saved/" + printerName + ".txt";
+            String fileName =  printerName + ".txt";
             FileInputStream file = new FileInputStream(fileName);
             ObjectInputStream obj = new ObjectInputStream(file);
 
@@ -393,7 +398,7 @@ public class Planner extends JFrame implements Serializable {
 
         String fileName = "ai/" + sb + ".txt";
         try{
-            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(fileName)));
             ArrayList<String> sugItem = new ArrayList<>();
             int lines= 0;
 
@@ -411,12 +416,26 @@ public class Planner extends JFrame implements Serializable {
         return null;
     }
 
+    public String getPrinterName() {
+        return printerName;
+    }
 
+    public void setPrinterName(String printerName) {
+        this.printerName = printerName;
+    }
 
+    public List<Item> getItems() {
+        return items;
+    }
 
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+    public JLabel getCurrentTimeLabel() {
+        return currentTimeLabel;
+    }
 
-
-
-
-
+    public void setCurrentTimeLabel(JLabel currentTimeLabel) {
+        this.currentTimeLabel = currentTimeLabel;
+    }
 }

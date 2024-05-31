@@ -1,9 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Planner_3D_Printing:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d54ce07-4504-4d40-96c2-a79683b0c010" name="Changes" comment="add ai files">
+    <list default="true" id="2d54ce07-4504-4d40-96c2-a79683b0c010" name="Changes" comment="solve some problems">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Planner_3D_Printing_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/MenuTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/PlannerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ff.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fff.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/saved/3d-printer.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/saved/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/saved/Test printer.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/saved/ai/PC.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/saved/ai/PETG.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/saved/ai/PLA.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3d-printer.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Planner_3D_Printing.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Planner_3D_Printing.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ai/PC.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ai/PETG.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ai/PLA.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Planner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Planner.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,6 +37,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="JUnit4 Test Class" />
       </list>
     </option>
   </component>
@@ -31,16 +55,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/zujsi/Downloads/3DPlanner&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit4",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4": "",
+    "last_opened_file_path": "C:/Users/zujsi/Downloads/Planner",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Planner_3D_Printing" />
@@ -48,9 +91,53 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MenuTest.testAddPrinter" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Planner_3D_Printing" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="MenuTest" />
+      <option name="METHOD_NAME" value="testAddPrinter" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PlannerTest.calculateDurationString" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Planner_3D_Printing" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="PlannerTest" />
+      <option name="METHOD_NAME" value="calculateDurationString" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PlannerTest.isValidDate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Planner_3D_Printing" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="PlannerTest" />
+      <option name="METHOD_NAME" value="isValidDate" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PlannerTest.updateDateTimeLabels" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Planner_3D_Printing" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="PlannerTest" />
+      <option name="METHOD_NAME" value="updateDateTimeLabels" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.PlannerTest.updateDateTimeLabels" />
+        <item itemvalue="JUnit.PlannerTest.isValidDate" />
+        <item itemvalue="JUnit.PlannerTest.calculateDurationString" />
+        <item itemvalue="JUnit.MenuTest.testAddPrinter" />
       </list>
     </recent_temporary>
   </component>
@@ -63,7 +150,8 @@
       <option name="presentableId" value="Default" />
       <updated>1717071685605</updated>
       <workItem from="1717071687144" duration="3288000" />
-      <workItem from="1717098017766" duration="1156000" />
+      <workItem from="1717098017766" duration="1534000" />
+      <workItem from="1717177038109" duration="8491000" />
     </task>
     <task id="LOCAL-00001" summary="add icon">
       <created>1715873254971</created>
@@ -93,7 +181,14 @@
       <option name="project" value="LOCAL" />
       <updated>1716670504967</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="solve some problems">
+      <created>1717099369788</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1717099369788</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -116,6 +211,7 @@
     <MESSAGE value="add save button" />
     <MESSAGE value="add AI, new buttons, colors" />
     <MESSAGE value="add ai files" />
-    <option name="LAST_COMMIT_MESSAGE" value="add ai files" />
+    <MESSAGE value="solve some problems" />
+    <option name="LAST_COMMIT_MESSAGE" value="solve some problems" />
   </component>
 </project>

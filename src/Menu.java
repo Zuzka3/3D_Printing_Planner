@@ -13,23 +13,37 @@ public class Menu extends JPanel implements ActionListener {
     private Map<String, Planner> printers;
     private Planner currentP;
     private boolean playing;
+    private File saveDirectory;
 
     public static final int HEIGHT = 200;
 
+    public Menu() {
+        this(new File(""));
+    }
 
-    public Menu(){
-        setBackground(new Color(54,54,54));
+    public Menu(File saveDirectory) {
+        setBackground(new Color(54, 54, 54));
         playing = false;
         printers = new HashMap<>();
+        this.saveDirectory = saveDirectory;
 
-        setLayout(new GridLayout(buttons.size() +2, 1, 0, 30));
+        setLayout(new GridLayout(buttons.size() + 2, 1, 0, 30));
+
+        File[] savedFiles = getFilesFromDirectory(new File(""));
+        if(savedFiles != null) {
+            for (File f : savedFiles) {
+                String name = f.getName().replace(".txt", "");
+                if (printers.containsKey(name)) continue;
+                addPrinter(name);
+            }
+        }
 
         JButton deleteAllB = new JButton("DELETE ALL SAVED FILES");
         deleteAllB.setFont(new Font("Serif", Font.BOLD, 30));
         deleteAllB.setBackground(new Color(0xFFFF0000, true));
         deleteAllB.setForeground(Color.WHITE);
         deleteAllB.addActionListener(e -> {
-            for(Map.Entry<String, Planner> entry : printers.entrySet()){
+            for (Map.Entry<String, Planner> entry : printers.entrySet()) {
                 String key = entry.getKey();
                 deleteSave(key + ".txt");
             }
@@ -39,12 +53,11 @@ public class Menu extends JPanel implements ActionListener {
         addPrinterButton.setFont(new Font("Serif", Font.BOLD, 50));
         addPrinterButton.setBackground(new Color(0xFFFFFFFF, true));
         addPrinterButton.addActionListener(e -> {
-            String name = JOptionPane.showInputDialog(this,"Enter printer name: ");
-            if(name != null && !name.trim().isEmpty()){
+            String name = JOptionPane.showInputDialog(this, "Enter printer name: ");
+            if (name != null && !name.trim().isEmpty()) {
                 boolean isSame = false;
-                for(Map.Entry<String, Planner> entry : printers.entrySet()) {
+                for (Map.Entry<String, Planner> entry : printers.entrySet()) {
                     String key = entry.getKey();
-
                     if (name.equalsIgnoreCase(key)) {
                         JOptionPane.showMessageDialog(this, "Name is taken!");
                         isSame = true;
@@ -52,7 +65,7 @@ public class Menu extends JPanel implements ActionListener {
                     }
                 }
 
-                if(!isSame){
+                if (!isSame) {
                     addPrinter(name);
                     this.remove(addPrinterButton);
                     this.add(addPrinterButton);
@@ -68,7 +81,7 @@ public class Menu extends JPanel implements ActionListener {
         currentP = null;
     }
 
-    public void addPrinter(String name){
+    public void addPrinter(String name) {
         JButton button = createButton(name);
 
         button.setForeground(Color.WHITE);
@@ -77,7 +90,7 @@ public class Menu extends JPanel implements ActionListener {
 
         printers.put(name, new Planner(name));
 
-        setLayout(new GridLayout(buttons.size() + 3, 1,0,30));
+        setLayout(new GridLayout(buttons.size() + 3, 1, 0, 30));
         revalidate();
         repaint();
     }
@@ -91,11 +104,11 @@ public class Menu extends JPanel implements ActionListener {
         return button;
     }
 
-    public void deleteSave(String name){
-        File file = findFile(name, new File("saved"));
-        if(file.delete()){
+    public void deleteSave(String name) {
+        File file = findFile(name, saveDirectory);
+        if (file != null && file.delete()) {
             System.out.println("Deleted file \"" + file.getName() + "\".");
-        }else{
+        } else {
             System.out.println("File \"" + name + "\" not found.");
         }
     }
@@ -119,6 +132,8 @@ public class Menu extends JPanel implements ActionListener {
         return directory.listFiles();
     }
 
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!playing) {
@@ -139,9 +154,9 @@ public class Menu extends JPanel implements ActionListener {
             }
 
         }
-
     }
 
+    // Getters and setters
     public ArrayList<JButton> getButtons() {
         return buttons;
     }
