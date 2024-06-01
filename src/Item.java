@@ -16,13 +16,6 @@ public class Item implements Serializable {
 
     private static List<Item> items = new ArrayList<>();
 
-    public static void addEvent(Item item) {
-        items.add(item);
-    }
-
-    public static List<Item> getEvents() {
-        return items;
-    }
 
 
     public Item(String name, String material, Date dateStart, Date dateEnd, int status, String optionalInfo) {
@@ -98,11 +91,6 @@ public class Item implements Serializable {
 
     public static void setItems(List<Item> items) {
         Item.items = items;
-    }
-
-    public static void setEvents(List<Item> items) {
-        Item.items = items;
-
     }
 
     public String getDateStr() {

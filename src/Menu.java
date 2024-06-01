@@ -81,6 +81,11 @@ public class Menu extends JPanel implements ActionListener {
         currentP = null;
     }
 
+    /**
+     * Adds a new event to the planner.
+     *
+     * @param name The name of the printer to add.
+     */
     public void addPrinter(String name) {
         JButton button = createButton(name);
 
@@ -95,6 +100,12 @@ public class Menu extends JPanel implements ActionListener {
         repaint();
     }
 
+    /**
+     * Creates a new JButton with the specified text and formatting.
+     *
+     * @param text The text to be displayed on the button.
+     * @return A JButton object with the specified text and formatting.
+     */
     private JButton createButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font("Serif", Font.BOLD, 50));
@@ -104,6 +115,12 @@ public class Menu extends JPanel implements ActionListener {
         return button;
     }
 
+
+    /**
+     * Deletes a saved planner file.
+     *
+     * @param name The name of the file to be deleted.
+     */
     public void deleteSave(String name) {
         File file = findFile(name, saveDirectory);
         if (file != null && file.delete()) {
@@ -113,6 +130,13 @@ public class Menu extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Finds a file with the specified name within a directory.
+     *
+     * @param name The name of the file to be found.
+     * @param file The directory to search within.
+     * @return A File object representing the found file, or null if not found.
+     */
     public File findFile(String name, File file) {
         File[] files = file.listFiles();
         if (files != null) {
@@ -128,6 +152,12 @@ public class Menu extends JPanel implements ActionListener {
         return null;
     }
 
+    /**
+     * Retrieves a list of files from a directory.
+     *
+     * @param directory The directory to get the files from.
+     * @return An array of File objects representing the files in the directory, or null if there are no files.
+     */
     public File[] getFilesFromDirectory(File directory){
         return directory.listFiles();
     }
@@ -156,7 +186,6 @@ public class Menu extends JPanel implements ActionListener {
         }
     }
 
-    // Getters and setters
     public ArrayList<JButton> getButtons() {
         return buttons;
     }

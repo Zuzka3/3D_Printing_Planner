@@ -15,12 +15,12 @@ public class Planner extends JFrame implements Serializable {
     private List<Item> items = new ArrayList<>();
 
     private JButton addButton, editButton, showDetails, deleteButton, saveButton;
-    private JPanel eventPanel, controlPanel, timePanel, eventStatusPanel;
+    private JPanel projectPanel, controlPanel, timePanel, projectStatusPanel;
 
 
 
     private JLabel currentTimeLabel, currentDateLabel, eventStatusLabel;
-    private JTable eventTable;
+    private JTable projectTable;
     private Timer timer;
 
     private long currentDate;
@@ -35,9 +35,9 @@ public class Planner extends JFrame implements Serializable {
         readFromFile();
 
         JLabel backgroundLabel = new JLabel();
-        eventPanel = new JPanel(new BorderLayout());
-        eventPanel.add(backgroundLabel, BorderLayout.CENTER);
-        eventPanel.setOpaque(false);
+        projectPanel = new JPanel(new BorderLayout());
+        projectPanel.add(backgroundLabel, BorderLayout.CENTER);
+        projectPanel.setOpaque(false);
 
 
         setSize(800, 600);
@@ -49,6 +49,9 @@ public class Planner extends JFrame implements Serializable {
         setVisible(false);
     }
 
+    /**
+     * Initializes the components of the planner window.
+     */
     private void initComponents() {
         addButton = new JButton("Add");
         editButton = new JButton("Edit");
@@ -85,16 +88,16 @@ public class Planner extends JFrame implements Serializable {
         tableModel.addColumn("Details");
 
 
-        eventTable = new JTable(tableModel);
-        eventTable.setDefaultEditor(Object.class, null);
+        projectTable = new JTable(tableModel);
+        projectTable.setDefaultEditor(Object.class, null);
 
-        JScrollPane scrollPane = new JScrollPane(eventTable);
+        JScrollPane scrollPane = new JScrollPane(projectTable);
 
-        eventPanel = new JPanel();
-        eventPanel.setLayout(new BorderLayout());
-        eventPanel.add(scrollPane, BorderLayout.CENTER);
+        projectPanel = new JPanel();
+        projectPanel.setLayout(new BorderLayout());
+        projectPanel.add(scrollPane, BorderLayout.CENTER);
 
-        eventPanel.revalidate();
+        projectPanel.revalidate();
 
         currentTimeLabel = new JLabel();
         currentDateLabel = new JLabel();
@@ -105,46 +108,44 @@ public class Planner extends JFrame implements Serializable {
         timePanel.add(currentTimeLabel);
         timePanel.add(currentDateLabel);
 
-        eventStatusLabel = new JLabel("Není aktivní tisk. Další projekt: ");
+        eventStatusLabel = new JLabel("Printing is not active. Next project: ");
         eventStatusLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
-        eventStatusPanel = new JPanel();
-        eventStatusPanel.setBackground(Color.GREEN);
-        eventStatusPanel.setBorder(BorderFactory.createTitledBorder("STATUS"));
-        eventStatusPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        eventStatusPanel.add(eventStatusLabel);
+        projectStatusPanel = new JPanel();
+        projectStatusPanel.setBackground(Color.GREEN);
+        projectStatusPanel.setBorder(BorderFactory.createTitledBorder("STATUS"));
+        projectStatusPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        projectStatusPanel.add(eventStatusLabel);
 
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new BorderLayout());
         sidePanel.add(timePanel, BorderLayout.WEST);
-        sidePanel.add(eventStatusPanel, BorderLayout.EAST);
+        sidePanel.add(projectStatusPanel, BorderLayout.EAST);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(eventPanel, BorderLayout.CENTER);
+        mainPanel.add(projectPanel, BorderLayout.CENTER);
         mainPanel.add(controlPanel, BorderLayout.EAST);
         mainPanel.add(sidePanel, BorderLayout.SOUTH);
 
         getContentPane().add(mainPanel);
 
-        addButton.addActionListener(e -> addEvent());
-        editButton.addActionListener(e -> editEvent());
-        deleteButton.addActionListener(e -> deleteEvent());
+        addButton.addActionListener(e -> addProject());
+        editButton.addActionListener(e -> editProject());
+        deleteButton.addActionListener(e -> deleteProject());
         saveButton.addActionListener(e -> saveToFile());
 
-
-
         showDetails.addActionListener(e -> {
-            int selectedRow = eventTable.getSelectedRow();
+            int selectedRow = projectTable.getSelectedRow();
             if (selectedRow != -1) {
                 String details = items.get(selectedRow).getOptionalInfo();
                 if (details != null && !details.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, details, "Event Details", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, details, "Project Details", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this, "No details provided for this event.", "Event Details", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No details provided for this project.", "Project Details", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Please select an event to show details.");
+                JOptionPane.showMessageDialog(this, "Please select an project to show details.");
             }
         });
 
@@ -153,13 +154,17 @@ public class Planner extends JFrame implements Serializable {
             @Override
             public void run() {
                 updateDateTimeLabels();
-                updateEventStatus();
+                updateProjectStatus();
             }
         }, 0, 500);
 
     }
 
-    private void addEvent() {
+
+    /**
+     * Opens a dialog to get user input for a new project and adds it to the list.
+     */
+    private void addProject() {
         String[] materials = {"PLA - normal", "PETG - waterproof", "PC - tough"};
 
         String[] printDurations = {"1 min", "5 min", "10 min", "15 min", "30 min", "1 hour", "2 hours", "3 hours", "4h", "5h", "6h", "7h"};
@@ -176,7 +181,7 @@ public class Planner extends JFrame implements Serializable {
             int aiIndex = JOptionPane.showConfirmDialog(null, "AI suggested: " + aiOption);
             if(aiIndex == JOptionPane.YES_OPTION) name = aiOption;
             else if(aiIndex == JOptionPane.CANCEL_OPTION) name = null;
-            else name = JOptionPane.showInputDialog(this, "Enter event name");
+            else name = JOptionPane.showInputDialog(this, "Enter project name");
 
             if(name != null && !name.trim().isEmpty()){
 
@@ -214,21 +219,24 @@ public class Planner extends JFrame implements Serializable {
 
                             items.add(item);
 
-                            updateEventTable();
+                            updateProjectTable();
                         } catch (Exception e) {
-                            JOptionPane.showMessageDialog(this, "Event not added.");
+                            JOptionPane.showMessageDialog(this, "Project not added.");
                         }
                     } else {
-                        JOptionPane.showMessageDialog(this, "Invalid date format. Event not added.");
+                        JOptionPane.showMessageDialog(this, "Invalid date format. Project not added.");
                     }
                 }
             }
         }
-        updateEventStatus();
+        updateProjectStatus();
     }
 
-    private void updateEventTable() {
-        DefaultTableModel model = (DefaultTableModel) eventTable.getModel();
+    /**
+     * Updates the table model to reflect the current list of projects.
+     */
+    private void updateProjectTable() {
+        DefaultTableModel model = (DefaultTableModel) projectTable.getModel();
         model.setRowCount(0);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -241,6 +249,13 @@ public class Planner extends JFrame implements Serializable {
         }
     }
 
+    /**
+     * Calculates a string representation of the project duration.
+     *
+     * @param startDate The start date of the project.
+     * @param endDate The end date of the project.
+     * @return A string representing the project duration (e.g., "1h 30min").
+     */
     public String calculateDurationString(Date startDate, Date endDate) {
         long durationMillis = endDate.getTime() - startDate.getTime();
         int minutes = (int) (durationMillis / (60 * 1000));
@@ -256,6 +271,12 @@ public class Planner extends JFrame implements Serializable {
         return durationStr;
     }
 
+    /**
+     * Checks if the provided date string is in a valid HH:mm format.
+     *
+     * @param dateStr The date string to validate.
+     * @return True if the date string is valid, false otherwise.
+     */
     public boolean isValidDate(String dateStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         dateFormat.setLenient(false);
@@ -268,49 +289,58 @@ public class Planner extends JFrame implements Serializable {
         }
     }
 
-    private void editEvent() {
-        int selectedRow = eventTable.getSelectedRow();
+    /**
+     * Opens a dialog to get user input and edits the selected project.
+     */
+    private void editProject() {
+        int selectedRow = projectTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select an event to edit.");
+            JOptionPane.showMessageDialog(this, "Please select an project to edit.");
             return;
         }
 
         Item selectedItem = items.get(selectedRow);
-        String newName = JOptionPane.showInputDialog(this, "Enter new event name:", selectedItem.getName());
+        String newName = JOptionPane.showInputDialog(this, "Enter new project name:", selectedItem.getName());
         if (newName != null && !newName.trim().isEmpty()) {
             String newDateStr = JOptionPane.showInputDialog(this, "Enter new time (HH:mm):", selectedItem.getDateStr());
             if (isValidDate(newDateStr)) {
-                String newDetails = JOptionPane.showInputDialog(this, "Enter new event details:", selectedItem.getDetails());
+                String newDetails = JOptionPane.showInputDialog(this, "Enter new project details:", selectedItem.getDetails());
                 try {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                     Date newDate = dateFormat.parse(newDateStr);
                     selectedItem.setName(newName);
                     selectedItem.setDateStart(newDate);
                     selectedItem.setDetails(newDetails);
-                    updateEventTable();
+                    updateProjectTable();
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Event not edited.");
+                    JOptionPane.showMessageDialog(this, "Project not edited.");
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid date format. Event not edited.");
+                JOptionPane.showMessageDialog(this, "Invalid date format. Project not edited.");
             }
         }
     }
 
-    private void deleteEvent() {
-        int selectedRow = eventTable.getSelectedRow();
+    /**
+     * Deletes the selected project from the list.
+     */
+    private void deleteProject() {
+        int selectedRow = projectTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select an event to delete.");
+            JOptionPane.showMessageDialog(this, "Please select an project to delete.");
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this event?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this project?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             items.remove(selectedRow);
-            updateEventTable();
+            updateProjectTable();
         }
     }
 
+    /**
+     * Updates the labels displaying the current time and date.
+     */
     public void updateDateTimeLabels() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -321,7 +351,10 @@ public class Planner extends JFrame implements Serializable {
         currentDate = now.getTime();
     }
 
-    private void updateEventStatus() {
+    /**
+     * Updates the label displaying the project status.
+     */
+    private void updateProjectStatus() {
         Item nextItem = null;
         long currentTimeMillis = System.currentTimeMillis();
         for (Item item : items) {
@@ -329,7 +362,7 @@ public class Planner extends JFrame implements Serializable {
                 double statusPercent = ((double) (currentDate - item.getDateEnd().getTime()) /
                         (item.getDateEnd().getTime() - item.getDateStart().getTime()));
                 item.setStatus((int) Math.max(0, Math.min(100, (100 + Math.round(statusPercent * 100)))));
-                updateEventTable();
+                updateProjectTable();
             }
 
             long eventStartMillis = item.getDateStart().getTime();
@@ -340,18 +373,22 @@ public class Planner extends JFrame implements Serializable {
         }
 
         if (nextItem != null) {
-            eventStatusLabel.setText("Next Event: " + nextItem.getName() +
+            eventStatusLabel.setText("Next project: " + nextItem.getName() +
                     " - " + nextItem.getDateStr());
-            eventStatusPanel.setBackground(Color.orange);
+            projectStatusPanel.setBackground(Color.orange);
         } else {
-            eventStatusLabel.setText("No upcoming event");
-            eventStatusPanel.setBackground(Color.pink);
+            eventStatusLabel.setText("No upcoming project");
+            projectStatusPanel.setBackground(Color.pink);
         }
 
     }
-    
-    
 
+
+    /**
+     * Saves the list of printing projects to a file.
+     *
+     * @throws IOException If an I/O error occurs while saving the data.
+     */
     public void saveToFile(){
         try {
             String fileName = printerName + ".txt";
@@ -368,6 +405,12 @@ public class Planner extends JFrame implements Serializable {
         }
     }
 
+    /**
+     * Reads the list of printing projects from a file.
+     *
+     * @throws IOException If an I/O error occurs while reading the data.
+     * @throws ClassNotFoundException If the class of the objects in the file is not found.
+     */
     public void readFromFile(){
         try {
             String fileName =  printerName + ".txt";
@@ -386,6 +429,14 @@ public class Planner extends JFrame implements Serializable {
         }
     }
 
+    /**
+     * Suggests a project name based on the provided material.
+     * This method attempts to read a text file containing suggestions specific to the material type.
+     * If the file is not found, it returns null.
+     *
+     * @param material The material type for the project (PLA, PETG, PC).
+     * @return A suggested project name, or null if no suggestion is found.
+     */
     public String aiSuggestedItemNames(String material){
         char[] chars = material.toCharArray();
         StringBuilder sb = new StringBuilder();
